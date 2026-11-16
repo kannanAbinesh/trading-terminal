@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XAUUSD | Back Testing</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/public/style/commonStyles.css">
+    <link rel="stylesheet" href="/public/style/back-testing.css">
+</head>
+
+<body>
+    <main class="back-testing-page">
+
+        <!-- LIST : every saved back test. This is the first thing you see. -->
+        <section id="btListView">
+            <div class="back-testing-toolbar">
+                <input type="text" class="back-testing-search" id="btSearch" placeholder="Search by name or dataset">
+                <span class="back-testing-count" id="btCount"></span>
+                <button type="button" class="back-testing-primary" id="btNewButton">
+                    <i class="fa-solid fa-plus"></i>New back test
+                </button>
+            </div>
+
+            <div class="back-testing-scroll">
+                <table class="back-testing-table back-testing-list-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Dataset</th>
+                            <th>Period (UTC)</th>
+                            <th>Strategy values</th>
+                            <th class="back-testing-num">Trades</th>
+                            <th class="back-testing-num">Win rate</th>
+                            <th class="back-testing-num">Profit factor</th>
+                            <th class="back-testing-num">Max drawdown</th>
+                            <th class="back-testing-num">Net P&amp;L</th>
+                            <th>Created</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="btListBody"></tbody>
+                </table>
+                <div class="back-testing-empty" id="btEmpty" hidden>No back tests saved yet. Press "New back test" to run the first one.</div>
+            </div>
+
+            <div class="back-testing-pager">
+                <span id="btPageInfo"></span>
+                <button type="button" id="btPrev">Previous</button>
+                <button type="button" id="btNext">Next</button>
+            </div>
+        </section>
+
+        <!-- RESULT : one back test (just run, or opened from the list). -->
+        <section id="btResultView" hidden>
+            <button type="button" class="back-testing-back" id="btBack"><i class="fa-solid fa-arrow-left"></i>Back to the list</button>
+            <div class="back-testing-error" id="btError" hidden></div>
+            <div id="btResult"></div>
+        </section>
+
+    </main>
+
+    <!-- NEW BACK TEST : the form opens in a popup. -->
+    <div class="back-testing-modal" id="btModal" hidden>
+        <form class="back-testing-modal-box" id="btForm" novalidate>
+            <header class="back-testing-modal-head">
+                <h2>New back test</h2>
+                <button type="button" class="back-testing-close" id="btCloseButton" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+            </header>
+
+            <div class="back-testing-modal-body">
+
+                <fieldset class="back-testing-group">
+                    <legend>Back test details</legend>
+                    <div class="back-testing-grid">
+                        <label class="back-testing-field back-testing-wide">Back test name *
+                            <input type="text" id="fName" maxlength="60" placeholder="e.g. ST-HT M15 2024" required>
+                            <em>This is the folder name saved in uploads/backTesting</em>
+                        </label>
+                        <label class="back-testing-field back-testing-wide">Dataset (CSV) *
+                            <select id="fDataset" required>
+                                <option value="">Loading...</option>
+                            </select>
+                            <em>CSV files in uploads/datasets</em>
+                        </label>
+                        <label class="back-testing-field">From date
+                            <input type="date" id="fFrom">
+                        </label>
+                        <label class="back-testing-field">To date
+                            <input type="date" id="fTo">
+                        </label>
+                    </div>
+                </fieldset>
+
+                <fieldset class="back-testing-group">
+                    <legend>Strategy values (leave a field empty to use the saved Strategy Values)</legend>
+                    <div class="back-testing-grid">
+                        <label class="back-testing-field">SuperTrend ATR period
+                            <input type="number" id="fStPeriod" placeholder="10" min="2" max="200" step="1">
+                        </label>
+                        <label class="back-testing-field">SuperTrend multiplier
+                            <input type="number" id="fStMult" placeholder="3" min="0.1" max="20" step="0.1">
+                        </label>
+                        <label class="back-testing-field">HalfTrend amplitude
+                            <input type="number" id="fHtAmp" placeholder="2" min="1" max="50" step="1">
+                        </label>
+                        <label class="back-testing-field">ADX period
+                            <input type="number" id="fAdxPeriod" placeholder="14" min="2" max="100" step="1">
+                        </label>
+                        <label class="back-testing-field">ADX minimum (threshold)
+                            <input type="number" id="fAdxMin" placeholder="20" min="0" max="100" step="1">
+                        </label>
+                    </div>
+                </fieldset>
+
+                <fieldset class="back-testing-group">
+                    <legend>Trade settings</legend>
+                    <div class="back-testing-grid">
+                        <label class="back-testing-field">Initial balance
+                            <input type="number" id="fBalance" value="10000" min="100" step="100">
+                        </label>
+                        <label class="back-testing-field">Lot size
+                            <input type="number" id="fLots" value="0.02" min="0.01" step="0.01">
+                        </label>
+                        <label class="back-testing-field">Contract size
+                            <input type="number" id="fContract" value="100" min="1" step="1">
+                            <em>XAUUSD = 100 oz per lot</em>
+                        </label>
+                        <label class="back-testing-field">Spread (price)
+                            <input type="number" id="fSpread" value="0.30" min="0" step="0.05">
+                            <em>0.30 = 30 points</em>
+                        </label>
+                        <label class="back-testing-field">Commission per lot
+                            <input type="number" id="fCommission" value="0" min="0" step="0.5">
+                            <em>Round trip, account currency</em>
+                        </label>
+                        <label class="back-testing-field">Stop loss (price)
+                            <input type="number" id="fSl" value="0" min="0" step="0.5">
+                            <em>0 = no stop loss</em>
+                        </label>
+                        <label class="back-testing-field">Take profit (price)
+                            <input type="number" id="fTp" value="0" min="0" step="0.5">
+                            <em>0 = no take profit</em>
+                        </label>
+                    </div>
+                </fieldset>
+
+            </div>
+
+            <footer class="back-testing-modal-foot">
+                <span class="back-testing-status" id="btStatus"></span>
+                <button type="button" class="back-testing-ghost" id="btCancelButton">Cancel</button>
+                <button type="submit" class="back-testing-primary" id="btRun"><i class="fa-solid fa-play"></i>Run back test</button>
+            </footer>
+        </form>
+    </div>
+
+    <script src="/public/js/vendor/lightweight-charts.js"></script> <!-- Chart library (local copy). -->
+    <script src="/public/js/toaster.js"></script> <!-- Toaster + apiFetch. -->
+    <script src="/public/js/indicator-lines.js"></script> <!-- SuperTrend / HalfTrend lines. -->
+    <script src="/public/js/back-testing-view.js"></script> <!-- Result view (summary, charts, trades). -->
+    <script src="/public/js/back-testing.js"></script> <!-- List, new back test form and opening a result. -->
+</body>
+
+</html>

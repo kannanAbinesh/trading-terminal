@@ -1,0 +1,54 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Lexend", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: #ffffff;
+    color: #000000;
+}
+
+.page-not-found-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px;
+}
+
+.page-not-found-code {
+    font-size: 96px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 2px;
+    color: #000000;
+    margin-bottom: 24px;
+}
+
+.page-not-found-code span {
+    color: var(--brand);
+}
+
+.page-not-found-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #000000;
+    margin-bottom: 12px;
+}
+
+.page-not-found-text {
+    max-width: 420px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #8a9a9b;
+}
+
+@media (max-width: 480px) {
+    .page-not-found-code {
+        font-size: 72px;
+    }
+}

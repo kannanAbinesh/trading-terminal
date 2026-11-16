@@ -1,0 +1,238 @@
+openapi: 3.0.3
+
+info:
+  title: XAUUSD Trading Model (SuperTrend + HalfTrend + ADX)
+  version: 2.0.0
+  description: |
+    Signal API used by the MetaTrader 5 EA and the backtest API used by the dashboard.
+    Rule: SuperTrend and HalfTrend point the same way -> trade in that direction.
+    One of them changes -> close / do not trade. ADX must be >= the minimum to OPEN a new trade.
+    News: from 15 minutes before until 15 minutes after a scheduled news event, no trade is open and every open trade is closed.
+
+servers:
+  - url: http://localhost:3000/api/v1/trading
+
+paths:
+  /generateSignal:
+    post:
+      summary: Signal for the last closed candle
+      description: Send CLOSED candles (oldest first recommended, at least 300, 1000 advised) and the current position. The reply says which position the EA must hold.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [candles]
+              properties:
+                symbol: { type: string, example: XAUUSD }
+                timeframe: { type: string, example: H1 }
+                position: { type: string, enum: [BUY, SELL, NONE], example: NONE }
+                strategy:
+                  type: object
+                  description: Optional parameter overrides (superTrend, halfTrend, adx).
+                candles:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      time: { type: integer, description: Unix seconds }
+                      open: { type: number }
+                      high: { type: number }
+                      low: { type: number }
+                      close: { type: number }
+                      volume: { type: number }
+      responses:
+        "200":
+          description: Indicator state and target position
+          content:
+            application/json:
+              example:
+                status: 200
+                st_bull: false
+                ht_bull: false
+                adx: 32.44
+                adx_ok: true
+                trading_enabled: true
+                current_position: FLAT
+                target_position: SELL
+                reason: entry
+        "400":
+          description: Invalid or insufficient candles
+
+  /startTrading:
+    post:
+      summary: Allow new trades again
+      responses:
+        "200": { description: Trading started }
+
+  /stopTrading:
+    post:
+      summary: Stop opening NEW trades (open trades still close by the trend rule)
+      responses:
+        "200": { description: Trading stopped }
+
+  /liveCandles:
+    post:
+      summary: MT5 pushes the live candle, bid/ask, open position, account and ticks (every second)
+      description: No login cookie needed. The server saves closed candles and ticks as CSV under uploads/liveData and streams the data to the pages.
+      requestBody:
+        content:
+          application/json:
+            example:
+              symbol: XAUUSD
+              timeframe: M15
+              digits: 2
+              bid: 4010.25
+              ask: 4010.55
+              history: false
+              position: { type: BUY, lots: 0.02, open_price: 4008.1, open_time: 1762690000, profit: 4.3 }
+              account: { login: "123456", name: Demo, server: Broker-Demo, currency: USD, leverage: 500, balance: 10000.0, equity: 10004.3, margin: 20.5, free_margin: 9983.8 }
+              candles: [{ time: 1762690500, open: 4009, high: 4011, low: 4008, close: 4010, volume: 120 }]
+              ticks: [{ t: 1762690512345, b: 4010.25, a: 4010.55 }]
+      responses:
+        "200": { description: "OK. need_history = true asks the EA to send the candle history again" }
+        "400": { description: Invalid body }
+
+  /liveTrades:
+    post:
+      summary: MT5 pushes closed trades (each ticket is saved once in uploads/liveTrades/live_trades.csv)
+      description: No login cookie needed.
+      requestBody:
+        content:
+          application/json:
+            example:
+              symbol: XAUUSD
+              trades:
+                - { ticket: "5001", symbol: XAUUSD, type: BUY, lots: 0.02, entry_time: 1762690000, entry_price: 4008.1, exit_time: 1762693600, exit_price: 4012.4, profit: 8.6, swap: 0, commission: 0, exit_reason: EA, comment: "" }
+      responses:
+        "200": { description: "OK. received / saved counts" }
+        "400": { description: trades array missing }
+
+  /liveStream:
+    get:
+      summary: Server-Sent Events for the browser (snapshot, tick, trades, waiting)
+      responses:
+        "200": { description: text/event-stream }
+
+  /newsStatus:
+    get:
+      summary: Is trading stopped for news? (15 minutes before until 15 minutes after a scheduled news event). No login needed, the EA calls it every few seconds.
+      responses:
+        "200": { description: "{ blackout, event, startsAt, endsAt, nextEvent, minutesBefore, minutesAfter }" }
+
+  /botControl:
+    get:
+      summary: The manual controls (Trading ON/OFF and the last Close trade request). No login needed, the EA reads it every few seconds.
+      responses:
+        "200": { description: "{ tradingEnabled, closeRequestId, closedDirection, changedAt }" }
+
+  /closeTrade:
+    post:
+      summary: Exit the open trade now (button "Close trade"). Trading stays ON; the same trend is not entered again, the bot waits for a new trend.
+      responses:
+        "200": { description: The EA closes the trade within a few seconds }
+        "400": { description: There is no open trade }
+
+  /liveIndicators:
+    get:
+      summary: SuperTrend and HalfTrend lines of the live candles (Live Trade chart)
+      description: A value that is not sent uses the saved Strategy Value.
+      parameters:
+        - { name: superTrendPeriod, in: query, schema: { type: integer }, example: 10 }
+        - { name: superTrendMultiplier, in: query, schema: { type: number }, example: 3 }
+        - { name: halfTrendAmplitude, in: query, schema: { type: integer }, example: 2 }
+      responses:
+        "200": { description: "{ values, superTrend: [{time, value, trend}], halfTrend: [...] } or { waiting: true }" }
+        "400": { description: A value is out of range }
+
+  /me:
+    get:
+      summary: The logged in user
+      responses:
+        "200": { description: "{ user: { id, name, email, role } }" }
+
+  /liveTradeHistory:
+    get:
+      summary: Every closed trade saved from MT5
+      responses:
+        "200": { description: "{ trades: [...] } oldest first" }
+
+  /dashboardStats:
+    get:
+      summary: Account balance / equity (from MT5), trade totals and the equity curve
+      responses:
+        "200": { description: OK }
+
+  /weeklyNEWS:
+    get:
+      summary: Economic calendar events of one or more weeks
+      parameters:
+        - { name: weeks, in: query, required: true, schema: { type: string }, example: "2026-11-02,2026-11-09" }
+      responses:
+        "200": { description: "{ weeks: { 'YYYY-MM-DD': [events] } }" }
+
+  /collectWeeklyNEWS:
+    post:
+      summary: MT5 pushes this week's economic calendar (saved in uploads/weeklyNEWS). No login cookie needed.
+      responses:
+        "200": { description: Saved }
+
+  /strategyValues:
+    get:
+      summary: The saved strategy values (the ones the live signal uses)
+      responses:
+        "200": { description: "{ values: { superTrend: { period, multiplier }, halfTrend: { amplitude }, adx: { period, threshold } } }" }
+    post:
+      summary: Save the strategy values edited in the Strategy Values page
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              example: { superTrend: { period: 10, multiplier: 3 }, halfTrend: { amplitude: 2 }, adx: { period: 14, threshold: 20 } }
+      responses:
+        "200": { description: Saved }
+        "400": { description: A value is out of range }
+
+  /backTestDatasets:
+    get:
+      summary: CSV price files in uploads/datasets
+      responses:
+        "200": { description: "{ datasets: [{ file, size_mb }] }" }
+
+  /runBackTest:
+    post:
+      summary: Run a back test on a dataset and save it in uploads/backTesting/<name>
+      requestBody:
+        content:
+          application/json:
+            example:
+              name: Test one
+              dataset: XAU_15m_data.csv
+              from: "2024-01-01"
+              to: "2024-06-30"
+              superTrend: { period: 10, multiplier: 3 }
+              halfTrend: { amplitude: 2 }
+              adx: { period: 14, threshold: 20 }
+              trade: { initialBalance: 10000, lots: 0.02, contractSize: 100, spread: 0.3, commission: 0, stopLoss: 0, takeProfit: 0 }
+      responses:
+        "200": { description: Settings, summary, trades and chart data }
+        "400": { description: Invalid input }
+        "409": { description: A back test with this name already exists }
+
+  /backTestHistory:
+    get:
+      summary: Every saved back test (summary only)
+      responses:
+        "200": { description: "{ runs: [...] }" }
+
+  /backTestResult:
+    get:
+      summary: One saved back test with its trades and graphs
+      parameters:
+        - { name: name, in: query, required: true, schema: { type: string } }
+      responses:
+        "200": { description: OK }
+        "404": { description: Not found }

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XAUUSD | Live Trade History</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/public/style/commonStyles.css">
+    <link rel="stylesheet" href="/public/style/live-trade-history.css">
+</head>
+
+<body>
+    <main class="live-trade-history-page">
+
+        <!-- Totals of the trades shown by the filters. -->
+        <section class="live-trade-history-summary">
+            <div class="live-trade-history-stat"><span>Total trades</span><b id="sumTotal">0</b></div>
+            <div class="live-trade-history-stat"><span>Win rate</span><b id="sumRate">0%</b></div>
+            <div class="live-trade-history-stat"><span>Profit / Loss trades</span><b id="sumWL">0 / 0</b></div>
+            <div class="live-trade-history-stat"><span>Net P&amp;L</span><b id="sumPnl">0.00</b></div>
+        </section>
+
+        <!-- Top bar : how many trades are shown + the filter button (opens the filter popup, same as the News page). -->
+        <div class="live-trade-history-topbar">
+            <span class="live-trade-history-count" id="histCount"></span>
+
+            <div class="live-trade-history-filter-wrap" id="histFilterWrap">
+                <button type="button" class="live-trade-history-filter-btn" id="histFilterBtn" aria-label="Filter" aria-expanded="false">
+                    <i class="fa-solid fa-filter"></i>
+                    <span class="live-trade-history-filter-badge" id="histFilterBadge"></span>
+                </button>
+
+                <!-- Filter popup. -->
+                <div class="live-trade-history-filter-box" id="histFilterBox">
+                    <div class="live-trade-history-filter-title">Filter trades</div>
+
+                    <div class="live-trade-history-filter-grid">
+                        <div class="live-trade-history-field">
+                            <label for="fFrom">From</label>
+                            <input type="date" id="fFrom">
+                        </div>
+                        <div class="live-trade-history-field">
+                            <label for="fTo">To</label>
+                            <input type="date" id="fTo">
+                        </div>
+                    </div>
+
+                    <div class="live-trade-history-field">
+                        <label for="fType">Type</label>
+                        <select id="fType">
+                            <option value="">All</option>
+                            <option value="BUY">Buy</option>
+                            <option value="SELL">Sell</option>
+                        </select>
+                    </div>
+
+                    <div class="live-trade-history-field">
+                        <label for="fResult">Result</label>
+                        <select id="fResult">
+                            <option value="">All</option>
+                            <option value="PROFIT">Profit</option>
+                            <option value="LOSS">Loss</option>
+                        </select>
+                    </div>
+
+                    <div class="live-trade-history-filter-actions">
+                        <button type="button" class="live-trade-history-btn live-trade-history-btn-ghost" id="fClear">Clear</button>
+                        <button type="button" class="live-trade-history-btn live-trade-history-btn-primary" id="fApply">Apply</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section class="live-trade-history-card">
+            <div class="live-trade-history-scroll">
+                <table class="live-trade-history-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Ticket</th>
+                            <th>Trend</th>
+                            <th>Type</th>
+                            <th class="live-trade-history-num">Lots</th>
+                            <th>Started</th>
+                            <th class="live-trade-history-num">Entry price</th>
+                            <th>Ended</th>
+                            <th class="live-trade-history-num">Exit price</th>
+                            <th>Duration</th>
+                            <th>Closed by</th>
+                            <th class="live-trade-history-num">P&amp;L</th>
+                            <th>Result</th>
+                        </tr>
+                    </thead>
+                    <tbody id="histBody"></tbody>
+                </table>
+                <div class="live-trade-history-empty" id="histEmpty" style="display:none;">No trades found.</div>
+            </div>
+
+            <div class="live-trade-history-pager">
+                <span id="pageInfo"></span>
+                <button type="button" id="pPrev">Previous</button>
+                <button type="button" id="pNext">Next</button>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="/public/js/toaster.js"></script> <!-- Toaster + apiFetch. -->
+    <script src="/public/js/live-trade-history.js"></script> <!-- Table, filters and pages. -->
+</body>

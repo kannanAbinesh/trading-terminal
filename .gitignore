@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+
+# Secrets (copy to .env on every machine, never commit it)
+.env
+.env.*
+!.env.example
+
+# Data created while the bot runs (big, and different on every machine)
+uploads/datasets/*
+uploads/backTesting/*
+uploads/liveData/*
+uploads/liveTrades/*
+uploads/weeklyNEWS/*
+uploads/botControl.json
+
+# Keep the empty folders in git
+!uploads/*/
+!uploads/**/.gitkeep
+
+# Login users (emails and passwords). Keep this out of git too; use src/data/userDetails.example.json as a template.
+src/data/userDetails.json
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Zips and temporary files
+*.zip
+tmp/
+.tmp/

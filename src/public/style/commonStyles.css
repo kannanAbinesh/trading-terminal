@@ -1,0 +1,31 @@
+/* Shared by every page : reset + the colours of the application.
+   Company colour : #077a7d (teal). Change --brand here and the whole application follows. */
+:root {
+    /* Company colour and its tints. */
+    --brand: #077a7d;
+    --brand-light: #0a9396;       /* Start of the gradients. */
+    --brand-dark: #055c5e;        /* Hover / pressed. */
+    --brand-soft: #e8f4f4;        /* Tinted backgrounds. */
+    --brand-line: #cfe6e6;        /* Light borders. */
+    --brand-glow: rgba(7, 122, 125, 0.18);
+
+    /* Text. */
+    --text: #0f1f20;
+    --text-soft: #587072;
+    --text-faint: #8a9a9b;
+
+    /* Surfaces and lines. */
+    --surface: #ffffff;
+    --surface-soft: #f6fafa;
+    --line: #e3ecec;
+
+    /* Results. */
+    --profit: #16a34a;
+    --loss: #dc2626;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}

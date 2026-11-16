@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XAUUSD | Live Trade</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/public/style/commonStyles.css">
+    <link rel="stylesheet" href="/public/style/live-trade.css">
+</head>
+<body>
+    <main class="live-trade-page">
+
+        <section class="live-trade-chart-card">
+            <!-- Open / high / low / close of the candle under the mouse (or the latest one). Its own bar, outside the chart. -->
+            <div class="live-trade-topbar">
+                <div class="live-trade-legend" id="liveLegend"></div>
+
+                <!-- Opens the Trade Panel (trade controls and indicator lines). -->
+                <button type="button" class="live-trade-indicators-button" id="indicatorsButton">
+                    <i class="fa-solid fa-sliders"></i>Trade Panel
+                </button>
+            </div>
+
+            <!-- Trade Panel : trade controls on top, then the SuperTrend / HalfTrend lines. -->
+            <div class="live-trade-popup" id="indicatorsPopup" hidden>
+                <div class="live-trade-popup-head">
+                    <b>Trade Panel</b>
+                    <button type="button" class="live-trade-popup-close" id="indicatorsClose" aria-label="Close">&times;</button>
+                </div>
+
+                <!-- Trade controls : shown only to the developer login (live-trade-controls.js). -->
+                <div class="live-trade-popup-group" id="tradeControls" hidden>
+                    <p class="live-trade-popup-title">Trade controls</p>
+
+                    <div class="live-trade-popup-control">
+                        <button type="button" class="live-trade-switch-button" id="tradingSwitchButton">
+                            <i class="fa-solid fa-power-off"></i><span>Trading ON</span>
+                        </button>
+                        <p>While OFF, no new trade is opened. An open trade is not touched.</p>
+                    </div>
+
+                    <div class="live-trade-popup-control">
+                        <button type="button" class="live-trade-close-button" id="closeTradeButton">
+                            <i class="fa-solid fa-circle-xmark"></i><span>Close trade</span>
+                        </button>
+                        <p>Exits the open trade now. Trading stays ON, the bot waits for a new trend.</p>
+                    </div>
+                </div>
+
+                <!-- Indicator lines. -->
+                <div class="live-trade-popup-group">
+                    <p class="live-trade-popup-title">Indicator lines</p>
+                    <label class="live-trade-popup-switch">
+                        <input type="checkbox" id="superTrendEnabled">
+                        <span><b class="live-trade-key live-trade-key-supertrend"></b>SuperTrend</span>
+                    </label>
+                    <div class="live-trade-popup-fields">
+                        <label>ATR period
+                            <input type="number" id="superTrendPeriod" min="2" max="200" step="1">
+                        </label>
+                        <label>Multiplier
+                            <input type="number" id="superTrendMultiplier" min="0.1" max="20" step="0.1">
+                        </label>
+                    </div>
+                </div>
+
+                <div class="live-trade-popup-group">
+                    <label class="live-trade-popup-switch">
+                        <input type="checkbox" id="halfTrendEnabled">
+                        <span><b class="live-trade-key live-trade-key-halftrend"></b>HalfTrend</span>
+                    </label>
+                    <div class="live-trade-popup-fields">
+                        <label>Amplitude
+                            <input type="number" id="halfTrendAmplitude" min="1" max="50" step="1">
+                        </label>
+                    </div>
+                </div>
+
+                <p class="live-trade-popup-hint">An empty field uses the saved Strategy Value (the grey number), the one live trading uses.</p>
+                <p class="live-trade-popup-status" id="indicatorsStatus"></p>
+
+                <div class="live-trade-popup-buttons">
+                    <button type="button" class="live-trade-popup-reset" id="indicatorsReset">Use Strategy Values</button>
+                    <button type="button" class="live-trade-popup-apply" id="indicatorsApply">Apply</button>
+                </div>
+            </div>
+
+            <!-- Chart area. -->
+            <div class="live-trade-chart-wrap">
+                <div class="live-trade-chart" id="liveChart"></div>
+
+                <!-- News events : circles at the time of each event, the card opens when a circle is clicked (live-trade-news-markers.js). -->
+                <div class="live-trade-news-layer" id="newsLayer">
+                    <div class="live-trade-news-line" id="newsLine" hidden></div>
+                    <div class="live-trade-news-card" id="newsCard" hidden></div>
+                </div>
+
+                <!-- Shown until the first data arrives. -->
+                <div class="live-trade-overlay" id="liveOverlay">
+                    <i class="fa-solid fa-spinner fa-spin"></i>
+                    <p>Waiting for data from MetaTrader 5...</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="/public/js/vendor/lightweight-charts.js"></script> <!-- Chart library (TradingView Lightweight Charts, local copy). -->
+    <script src="/public/js/toaster.js"></script> <!-- Toaster + apiFetch. -->
+    <script src="/public/js/indicator-lines.js"></script> <!-- SuperTrend / HalfTrend lines. -->
+    <script src="/public/js/live-trade.js"></script> <!-- Live chart, open position and previous trades. -->
+    <script src="/public/js/live-trade-controls.js"></script> <!-- Close trade + Trading ON / OFF. -->
+    <script src="/public/js/live-trade-news-markers.js"></script> <!-- News circles on the chart. -->
+    <script src="/public/js/live-trade-indicators.js"></script> <!-- Trade Panel : indicator lines. -->
+</body>
+
+</html>

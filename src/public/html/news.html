@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XAUUSD | Economic News</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/public/style/commonStyles.css">
+    <link rel="stylesheet" href="/public/style/news.css">
+</head>
+
+<body>
+    <main class="news-page">
+
+        <!-- Top bar : period label + filter icon -->
+        <div class="news-topbar">
+            <span class="news-period" id="newsPeriod"></span>
+
+            <div class="news-filter-wrap" id="newsFilterWrap">
+                <button type="button" class="news-filter-btn" id="newsFilterBtn" aria-label="Filter"
+                    aria-expanded="false">
+                    <i class="fa-solid fa-filter"></i>
+                    <span class="news-filter-badge" id="newsFilterBadge"></span>
+                </button>
+
+                <!-- Filter dialog -->
+                <div class="news-filter-box" id="newsFilterBox">
+                    <div class="news-filter-title">Filter news</div>
+
+                    <div class="news-filter-grid">
+                        <div class="news-field">
+                            <label for="newsFrom">From</label>
+                            <input type="date" id="newsFrom">
+                        </div>
+                        <div class="news-field">
+                            <label for="newsTo">To</label>
+                            <input type="date" id="newsTo">
+                        </div>
+                    </div>
+
+                    <div class="news-field">
+                        <label for="newsImportance">Impact</label>
+                        <select id="newsImportance">
+                            <option value="all">All</option>
+                            <option value="high">High</option>
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+
+                    <div class="news-field">
+                        <label for="newsCurrency">Currency</label>
+                        <select id="newsCurrency">
+                            <option value="all">All</option>
+                        </select>
+                    </div>
+
+                    <div class="news-filter-actions">
+                        <button type="button" class="news-btn news-btn-ghost" id="newsClear">Clear</button>
+                        <button type="button" class="news-btn news-btn-primary" id="newsApply">Apply</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- News list -->
+        <section id="newsList"></section>
+
+    </main>
+
+    <script src="/public/js/toaster.js"></script> <!-- Toaster + apiFetch. -->
+    <script src="/public/js/news.js"></script> <!-- Weekly news list and filters. -->
+</body>
+
+</html>

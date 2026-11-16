@@ -1,0 +1,176 @@
+body {
+    font-family: "Lexend", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--surface);
+    color: var(--text);
+}
+
+.dashboard-page {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    min-height: 100vh;
+    padding: 8px 24px 96px 0;   /* Room at the bottom for the floating trade of the wrapper. */
+}
+
+/* ---------- Number cards ---------- */
+.dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.dashboard-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 20px;
+    background: var(--surface-soft);
+    border-radius: 16px;
+}
+
+.dashboard-card-balance {
+    background: var(--brand-soft);
+}
+
+.dashboard-card-icon {
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--brand-light), var(--brand));
+    color: #ffffff;
+    font-size: 18px;
+}
+
+.dashboard-icon-total { background: #334e4f; }
+.dashboard-icon-profit { background: var(--profit); }
+.dashboard-icon-loss { background: var(--loss); }
+
+.dashboard-card-body {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.dashboard-card-label {
+    font-size: 12px;
+    color: var(--text-soft);
+}
+
+.dashboard-card-value {
+    margin: 2px 0;
+    font-size: clamp(19px, 1.9vw, 26px);
+    font-weight: 700;
+    line-height: 1.15;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dashboard-card-note {
+    font-size: 11px;
+    color: var(--text-faint);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dashboard-profit { color: var(--profit); }
+.dashboard-loss { color: var(--loss); }
+
+/* ---------- Equity graph (no box, just a title and the graph) ---------- */
+.dashboard-chart-card {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 14px;
+    min-height: 380px;
+}
+
+.dashboard-chart-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 10px 24px;
+}
+
+.dashboard-chart-head h2 {
+    font-size: 17px;
+}
+
+.dashboard-chart-head p {
+    margin-top: 2px;
+    font-size: 12px;
+    color: var(--text-soft);
+}
+
+.dashboard-chart-numbers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 22px;
+    font-size: 13px;
+    color: var(--text-soft);
+}
+
+.dashboard-chart-numbers b {
+    color: var(--text);
+    font-weight: 600;
+}
+
+.dashboard-chart-wrap {
+    position: relative;
+    flex: 1;
+    min-height: 300px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.dashboard-chart {
+    position: absolute;
+    inset: 0;
+}
+
+.dashboard-chart-empty {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 24px;
+    background: var(--surface);
+    color: var(--text-faint);
+    font-size: 13px;
+    text-align: center;
+}
+
+.dashboard-chart-empty i {
+    font-size: 30px;
+    color: var(--brand);
+}
+
+/* ---------- Responsive : laptop, tablet, phone ---------- */
+@media (max-width: 1100px) {
+    .dashboard-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 900px) {
+    .dashboard-page { gap: 22px; padding: 8px 16px 96px; }
+}
+
+@media (max-width: 560px) {
+    .dashboard-page { padding: 4px 12px 90px; }
+    .dashboard-cards { grid-template-columns: 1fr; gap: 12px; }
+    .dashboard-card { padding: 14px 16px; }
+    .dashboard-card-value { font-size: 22px; }
+    .dashboard-chart-card { min-height: 340px; }
+    .dashboard-chart-wrap { min-height: 260px; }
+    .dashboard-chart-numbers { gap: 4px 16px; }
+}

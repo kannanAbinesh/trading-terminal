@@ -1,0 +1,5 @@
+{
+  "superTrend": { "period": 10, "multiplier": 3 },
+  "halfTrend": { "amplitude": 2 },
+  "adx": { "period": 14, "threshold": 20 }
+}

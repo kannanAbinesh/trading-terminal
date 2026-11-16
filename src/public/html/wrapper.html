@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Import Lexend font from google fonts. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Style. -->
+    <link rel="stylesheet" href="/public/style/commonStyles.css">
+    <link rel="stylesheet" href="/public/style/toaster.css">
+    <link rel="stylesheet" href="/public/style/wrapper.css">
+</head>
+
+<body>
+
+    <!-- Loader (hidden by auth.js once the user is known). -->
+    <div class="wrapper-boot" data-boot-loader>
+        <span class="wrapper-boot-spinner"></span>
+    </div>
+
+    <!-- Wrapper section HTML. -->
+    <div class="wrapper-layout">
+
+        <!-- Sidebar -->
+        <aside class="wrapper-sidebar" id="wrapper-sidebar">
+            <div>
+
+                <!-- Logo section : logo + name on the left, close (X) on the right (mobile only). -->
+                <div class="wrapper-logo">
+                    <div class="wrapper-brand">
+                        <span class="wrapper-logo-icon">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </span>
+                        <span class="wrapper-logo-text">Trading Terminal</span>
+                    </div>
+
+                    <button type="button" class="wrapper-close-btn" id="wrapper-close-btn" aria-label="Close menu">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <div class="wrapper-side-menu" id="wrapper-side-menu"></div> <!-- Side menu container (filled by wrapper.js). -->
+            </div>
+        </aside>
+
+        <div class="wrapper-overlay" id="wrapper-overlay"></div>
+
+        <div class="wrapper-main">
+
+            <!-- Navbar -->
+            <header class="wrapper-navbar">
+                <div class="wrapper-navbar-left">
+                    <button type="button" class="wrapper-toggle-btn" id="wrapper-toggle-btn" aria-label="Open menu">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <h1 class="wrapper-page-title" id="wrapper-page-title"></h1>
+                </div>
+
+                <!-- Logout button. -->
+                <div class="wrapper-navbar-right">
+                    <i class="fa-solid fa-right-from-bracket" id="wrapper-logout-btn"></i>
+                </div>
+            </header>
+
+            <!-- Page content (dashboard / history load here) -->
+            <main class="wrapper-content">
+                <div class="wrapper-loader" id="wrapper-loader">
+                    <span class="wrapper-spinner"></span>
+                </div>
+                <iframe class="wrapper-frame" id="wrapper-frame" title="Page content"></iframe>
+            </main>
+
+        </div>
+    </div>
+
+    <!-- Floating live trade : shown on every page while MT5 has an open position.
+         The x makes it a small round icon (bubble), clicking the icon opens it again. -->
+    <div class="wrapper-trade-widget" id="wrapper-trade-widget" hidden>
+        <button type="button" class="wrapper-trade-widget-minimise" id="wrapper-trade-minimise" title="Minimise" aria-label="Minimise live trade">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <!-- Click here to open the Live Trade page. -->
+        <div class="wrapper-trade-widget-body" id="wrapper-trade-body" role="button" tabindex="0" title="Open Live Trade">
+            <div class="wrapper-trade-widget-head">
+                <span class="wrapper-trade-widget-side" id="wrapper-trade-side">BUY</span>
+                <span class="wrapper-trade-widget-symbol" id="wrapper-trade-symbol">XAUUSD</span>
+                <span class="wrapper-trade-widget-live"><i class="fa-solid fa-circle"></i> LIVE</span>
+            </div>
+            <div class="wrapper-trade-widget-pnl" id="wrapper-trade-pnl">0.00</div>
+            <div class="wrapper-trade-widget-meta">
+                <span>Lots <b id="wrapper-trade-lots">-</b></span>
+                <span>Entry <b id="wrapper-trade-entry">-</b></span>
+                <span>Now <b id="wrapper-trade-now">-</b></span>
+            </div>
+            <div class="wrapper-trade-widget-since" id="wrapper-trade-since"></div>
+        </div>
+    </div>
+
+    <button type="button" class="wrapper-trade-bubble" id="wrapper-trade-bubble" title="Show live trade" aria-label="Show live trade" hidden>
+        <i class="fa-solid fa-chart-line"></i>
+        <span class="wrapper-trade-bubble-dot" id="wrapper-trade-bubble-dot"></span>
+    </button>
+
+    <script src="/public/js/toaster.js"></script> <!-- Toaster + apiFetch (toast for every API response). -->
+    <script src="/public/js/auth.js"></script> <!-- Cookie check : sends the user to /login when needed. -->
+    <script src="/public/js/wrapper.js"></script> <!-- Side menu, page loader, logout. -->
+    <script src="/public/js/wrapper-trade-widget.js"></script> <!-- Floating live trade + trade closed messages. -->
+
+</body>
+
+</html>

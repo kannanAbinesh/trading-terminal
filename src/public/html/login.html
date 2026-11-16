@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+
+    <!-- Import Lexend font from google fonts. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Style. -->
+    <link rel="stylesheet" href="/public/style/commonStyles.css">
+    <link rel="stylesheet" href="/public/style/toaster.css">
+    <link rel="stylesheet" href="/public/style/login.css">
+</head>
+
+<body>
+
+    <!-- Loader (hidden by auth.js). -->
+    <div class="login-boot" data-boot-loader>
+        <span class="login-boot-spinner"></span>
+    </div>
+
+    <!-- Login section HTML. -->
+    <div class="login-page">
+
+        <!-- Login form container. -->
+        <section class="login-form-panel">
+            <div class="login-form-inner">
+                <div class="login-logo">
+                    <span class="login-logo-icon">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </span>
+                    <span class="login-logo-text">Trading Terminal</span>
+                </div>
+
+                <h1>Login to your account</h1>
+                <p class="login-subtitle">Enter your details to login.</p>
+
+                <div class="login-form">
+                    <div class="login-field">
+                        <label for="email">Email Address</label>
+                        <div class="login-input-wrap">
+                            <i class="fa-regular fa-envelope login-input-icon"></i>
+                            <input 
+                                type="email" 
+                                id="email" 
+                                name="email" 
+                                placeholder="trader@example.com" 
+                                required
+                                autocomplete="email" 
+                            />
+                        </div>
+                    </div>
+
+                    <div class="login-field">
+                        <label for="password">Password</label>
+                        <div class="login-input-wrap">
+                            <i class="fa-solid fa-lock login-input-icon"></i>
+                            <input 
+                                type="password" 
+                                id="password" 
+                                name="password" 
+                                placeholder="Enter your password"
+                                required 
+                                autocomplete="current-password" 
+                            />
+                        </div>
+                    </div>
+
+                    <button type="submit" class="login-submit-btn" id="login-btn">Login</button>
+                </div>
+            </div>
+        </section>
+
+        <aside class="login-visual-panel" aria-hidden="true"></aside> <!-- Login banner. -->
+    </div>
+
+    <script src="/public/js/toaster.js"></script> <!-- Toaster + apiFetch. -->
+    <script src="/public/js/auth.js"></script> <!-- Script to find the user authentication. -->
+    <script src="/public/js/login.js"></script> <!-- Scriptfor the login functionality. -->
+
+</body>
+
+</html>

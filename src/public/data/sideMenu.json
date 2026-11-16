@@ -1,0 +1,80 @@
+[
+    {
+        "id": 1,
+        "role": "developer",
+        "menuOptions": [
+            {
+                "id": 1,
+                "name": "Dashboard",
+                "icon": "fa-solid fa-chart-column",
+                "page": "dashboard"
+            },
+            {
+                "id": 2,
+                "name": "Live Trade",
+                "icon": "fa-solid fa-tower-broadcast",
+                "page": "live-trade"
+            },
+            {
+                "id": 3,
+                "name": "Live Trade History",
+                "icon": "fa-solid fa-clock-rotate-left",
+                "page": "live-trade-history"
+            },
+            {
+                "id": 4,
+                "name": "Strategy Values",
+                "icon": "fa-solid fa-percent",
+                "page": "strategy-values"
+            },
+            {
+                "id": 5,
+                "name": "Back Testing",
+                "icon": "fa-solid fa-flask",
+                "page": "back-testing"
+            },
+            {
+                "id": 6,
+                "name": "NEWS",
+                "icon": "fa-solid fa-newspaper",
+                "page": "news"
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "role": "user",
+        "menuOptions": [
+            {
+                "id": 1,
+                "name": "Dashboard",
+                "icon": "fa-solid fa-chart-column",
+                "page": "dashboard"
+            },
+            {
+                "id": 2,
+                "name": "Live Trade",
+                "icon": "fa-solid fa-tower-broadcast",
+                "page": "live-trade"
+            },
+            {
+                "id": 3,
+                "name": "Live Trade History",
+                "icon": "fa-solid fa-clock-rotate-left",
+                "page": "live-trade-history"
+            },
+            {
+                "id": 4,
+                "name": "Back Testing",
+                "icon": "fa-solid fa-flask",
+                "page": "back-testing"
+            },
+            {
+                "id": 5,
+                "name": "NEWS",
+                "icon": "fa-solid fa-newspaper",
+                "page": "news"
+            }
+        ]
+    }
+]

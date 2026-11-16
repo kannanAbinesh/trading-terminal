@@ -1,0 +1,595 @@
+/* Back Testing page : saved list, "New back test" popup and the result.
+   Spacing separates the parts. Where an edge is needed it is a light line, with a gap between the parts. */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+body {
+    font-family: "Lexend", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--surface);
+    color: var(--text);
+}
+
+.back-testing-page {
+    min-height: 100vh;
+    padding: 16px 16px 96px;   /* Room for the floating trade of the wrapper. */
+}
+
+#btListView,
+#btResultView {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+/* ---------- Buttons ---------- */
+.back-testing-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    padding: 0 22px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--brand-light), var(--brand));
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.back-testing-primary i {
+    margin-right: 8px;
+}
+
+.back-testing-primary:hover {
+    background: var(--brand-dark);
+}
+
+.back-testing-primary:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
+.back-testing-ghost {
+    height: 40px;
+    padding: 0 20px;
+    border: 1px solid var(--brand-line);
+    border-radius: 12px;
+    background: var(--surface);
+    color: var(--brand);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.back-testing-ghost:hover {
+    background: var(--brand-soft);
+}
+
+.back-testing-back {
+    align-self: flex-start;
+    height: 36px;
+    padding: 0 16px;
+    border: 1px solid var(--brand-line);
+    border-radius: 10px;
+    background: var(--surface);
+    color: var(--brand);
+    font-family: inherit;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.back-testing-back i {
+    margin-right: 8px;
+}
+
+.back-testing-back:hover {
+    background: var(--brand-soft);
+}
+
+.back-testing-error {
+    padding: 10px 14px;
+    border-left: 3px solid var(--loss);
+    background: #fef2f2;
+    color: #b91c1c;
+    font-size: 13px;
+}
+
+/* ---------- List : toolbar ---------- */
+.back-testing-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 16px;
+}
+
+.back-testing-search {
+    flex: 1;
+    min-width: 200px;
+    max-width: 360px;
+    height: 40px;
+    padding: 0 14px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--surface);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 13px;
+    outline: none;
+}
+
+.back-testing-search:focus {
+    border-color: var(--brand);
+}
+
+.back-testing-count {
+    margin-right: auto;
+    font-size: 12px;
+    color: var(--text-soft);
+}
+
+/* ---------- Tables (list and trades) : only light lines between the rows ---------- */
+.back-testing-scroll {
+    overflow-x: auto;
+}
+
+.back-testing-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+.back-testing-table th {
+    padding: 12px 14px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-soft);
+    border-bottom: 1px solid var(--line);
+}
+
+.back-testing-table td {
+    padding: 13px 14px;
+    border-bottom: 1px solid var(--surface-soft);
+}
+
+.back-testing-table tbody tr:hover {
+    background: var(--surface-soft);
+}
+
+.back-testing-table .back-testing-num,
+.back-testing-table th.back-testing-num {
+    text-align: right;
+}
+
+/* Trade rows can be clicked (they show the trade on the chart). */
+.back-testing-block .back-testing-table tbody tr {
+    cursor: pointer;
+}
+
+.back-testing-name {
+    font-weight: 600;
+}
+
+.back-testing-sub {
+    display: block;
+    margin-top: 2px;
+    font-size: 11px;
+    color: var(--text-faint);
+}
+
+.back-testing-view-button {
+    height: 30px;
+    padding: 0 16px;
+    border: 1px solid var(--brand-line);
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--brand);
+    font-family: inherit;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.back-testing-view-button:hover {
+    background: var(--brand);
+    color: #ffffff;
+}
+
+.back-testing-empty {
+    padding: 48px 16px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-soft);
+}
+
+.back-testing-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.back-testing-badge-buy {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.back-testing-badge-sell,
+.back-testing-badge-loss {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.back-testing-badge-win {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.back-testing-pos {
+    color: var(--profit);
+    font-weight: 600;
+}
+
+.back-testing-neg {
+    color: var(--loss);
+    font-weight: 600;
+}
+
+.back-testing-up {
+    color: #089981;
+}
+
+.back-testing-down {
+    color: #e5383b;
+}
+
+.back-testing-pager {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 4px 4px 0;
+    font-size: 12px;
+    color: var(--text-soft);
+}
+
+.back-testing-pager button {
+    height: 32px;
+    padding: 0 14px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface);
+    font-family: inherit;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.back-testing-pager button:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+/* ---------- New back test popup ---------- */
+.back-testing-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 16px 120px;   /* Bottom room so the floating trade of the wrapper does not cover the buttons. */
+    background: rgba(15, 31, 32, 0.45);
+}
+
+.back-testing-modal-box {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 760px;
+    max-height: 100%;
+    background: var(--surface);
+    border-radius: 18px;
+    box-shadow: 0 24px 60px rgba(15, 31, 32, 0.3);
+    overflow: hidden;
+}
+
+.back-testing-modal-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 24px 8px;
+}
+
+.back-testing-modal-head h2 {
+    font-size: 18px;
+}
+
+.back-testing-close {
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--text-soft);
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.back-testing-close:hover {
+    background: var(--surface-soft);
+}
+
+.back-testing-modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+    padding: 12px 24px 20px;
+    overflow-y: auto;
+}
+
+.back-testing-modal-foot {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 14px 24px 18px;
+    border-top: 1px solid var(--line);
+}
+
+.back-testing-status {
+    margin-right: auto;
+    font-size: 13px;
+    color: var(--text-soft);
+}
+
+.back-testing-status-error {
+    color: var(--loss);
+}
+
+/* Each group is a heading and its fields. No box around it, the space is the separator. */
+.back-testing-group {
+    border: none;
+}
+
+.back-testing-group legend {
+    margin-bottom: 12px;
+    padding: 0;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    color: var(--brand);
+}
+
+.back-testing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 16px;
+}
+
+.back-testing-field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--text-soft);
+}
+
+.back-testing-field input,
+.back-testing-field select {
+    height: 38px;
+    padding: 0 10px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--surface);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 13px;
+}
+
+.back-testing-field input:focus,
+.back-testing-field select:focus {
+    outline: none;
+    border-color: var(--brand);
+}
+
+.back-testing-field input.back-testing-invalid,
+.back-testing-field select.back-testing-invalid {
+    border-color: var(--loss);
+}
+
+.back-testing-field em {
+    font-style: normal;
+    font-size: 11px;
+    color: var(--text-faint);
+}
+
+.back-testing-wide {
+    grid-column: span 2;
+}
+
+/* ---------- Result ---------- */
+#btResult {
+    display: flex;
+    flex-direction: column;
+    gap: 34px;
+}
+
+.back-testing-run-title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px 14px;
+    font-size: 18px;
+}
+
+.back-testing-run-title span {
+    font-size: 12px;
+    color: var(--text-soft);
+}
+
+.back-testing-note {
+    padding: 8px 14px;
+    border-left: 3px solid #f59e0b;
+    background: #fffbeb;
+    color: #92400e;
+    font-size: 12px;
+}
+
+/* The numbers have no boxes, only space between them. */
+.back-testing-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px 28px;
+}
+
+.back-testing-stat span {
+    display: block;
+    font-size: 12px;
+    color: var(--text-soft);
+}
+
+.back-testing-stat b {
+    display: block;
+    margin-top: 4px;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+/* A part of the result : a heading line and its content. */
+.back-testing-block-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.back-testing-block-head h3 {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.back-testing-hint {
+    font-size: 12px;
+    color: var(--text-soft);
+}
+
+.back-testing-key {
+    display: inline-block;
+    width: 14px;
+    height: 3px;
+    margin: 0 4px 3px 10px;
+    border-radius: 2px;
+}
+
+.back-testing-key-adx { background: #1f3a3b; }
+.back-testing-key-plus { background: #089981; }
+.back-testing-key-minus { background: #e5383b; }
+
+.back-testing-link {
+    border: none;
+    background: none;
+    font-family: inherit;
+    font-size: 12px;
+    color: var(--brand);
+    cursor: pointer;
+}
+
+.back-testing-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 20px;
+    min-height: 24px;
+    margin-bottom: 6px;
+    font-size: 12px;
+    color: var(--text-soft);
+}
+
+.back-testing-legend b {
+    font-weight: 600;
+}
+
+/* The charts have one light edge. */
+.back-testing-chart {
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.back-testing-chart-main { height: 420px; }
+.back-testing-chart-adx { height: 180px; }
+.back-testing-chart-equity { height: 240px; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+    .back-testing-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 560px) {
+    .back-testing-page {
+        padding: 8px 12px 90px;
+    }
+
+    .back-testing-toolbar .back-testing-primary {
+        width: 100%;
+    }
+
+    .back-testing-search {
+        max-width: none;
+    }
+
+    .back-testing-wide {
+        grid-column: span 1;
+    }
+
+    .back-testing-chart-main {
+        height: 340px;
+    }
+
+    .back-testing-modal {
+        padding: 0;
+        align-items: flex-end;
+    }
+
+    .back-testing-modal-box {
+        border-radius: 18px 18px 0 0;
+        max-height: 92%;
+    }
+}
+
+/* Indicator check boxes above the trade chart. */
+.back-testing-toggles {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+.back-testing-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--text-soft);
+    cursor: pointer;
+}
+
+.back-testing-toggle input { accent-color: var(--brand); cursor: pointer; }
+.back-testing-key-supertrend { background: linear-gradient(90deg, #0ea5a8 50%, #f97316 50%); }
+.back-testing-key-halftrend { background: linear-gradient(90deg, #2563eb 50%, #a21caf 50%); }

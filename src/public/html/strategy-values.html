@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strategy values</title>
+
+    <!-- Import Lexend font from google fonts. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Style. -->
+    <link rel="stylesheet" href="/public/style/commonStyles.css">
+    <link rel="stylesheet" href="/public/style/strategy-values.css">
+</head>
+
+<body>
+    <div class="strategy-values-page">
+        <main class="strategy-values-container">
+
+            <div class="strategy-values-sections" id="strategy-values-sections">
+
+                <!-- Super trend values section. -->
+                <section class="strategy-values-card">
+                    <div class="strategy-values-card-head">
+                        <div>
+                            <h2>Super trend</h2>
+                            <p>Trend line built from the ATR distance around each candle. Used by the live signal, the back test form and the chart lines.</p>
+                        </div>
+                    </div>
+                    <form class="strategy-values-form">
+                        <div class="strategy-values-fields">
+                            <div class="strategy-values-field">
+                                <label for="superTrend_period">ATR period</label>
+                                <input 
+                                    type="text" 
+                                    id="superTrend_period" 
+                                    name="period" 
+                                    min="0"
+                                    step="any"
+                                    required=""
+                                    data-strategy="superTrend"
+                                    data-key="period"
+                                />
+                            </div>
+                            <div class="strategy-values-field">
+                                <label for="superTrend_multiplier">Multiplier</label>
+                                <input
+                                    type="text" 
+                                    id="superTrend_multiplier" 
+                                    name="multiplier" 
+                                    min="0" 
+                                    step="any"
+                                    required=""
+                                    data-strategy="superTrend"
+                                    data-key="multiplier"
+                                />
+                            </div>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- Half trend values section. -->
+                <section class="strategy-values-card">
+                    <div class="strategy-values-card-head">
+                        <div>
+                            <h2>Half trend</h2>
+                            <p>Trend line that follows recent swing highs and lows.</p>
+                        </div>
+                    </div>
+                    <form class="strategy-values-form">
+                        <div class="strategy-values-fields">
+                            <div class="strategy-values-field">
+                                <label for="halfTrend_amplitude">Amplitude</label>
+                                <input
+                                    type="text" 
+                                    id="halfTrend_amplitude" 
+                                    name="amplitude" 
+                                    min="0" 
+                                    step="any"
+                                    required=""
+                                    data-strategy="halfTrend"
+                                    data-key="amplitude"
+                                />
+                            </div>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- ADX values section. -->
+                <section class="strategy-values-card">
+                    <div class="strategy-values-card-head">
+                        <div>
+                            <h2>ADX - Average Directional Index</h2>
+                            <p>Measures trend strength and blocks trades in sideways markets.</p>
+                        </div>
+                    </div>
+                    <form class="strategy-values-form">
+                        <div class="strategy-values-fields">
+                            <div class="strategy-values-field">
+                                <label for="adx_period">ADX period</label>
+                                <input 
+                                    type="text"
+                                    id="adx_period" 
+                                    name="period" 
+                                    min="0" 
+                                    step="any" 
+                                    required=""
+                                    data-strategy="adx"
+                                    data-key="period"
+                                />
+                            </div>
+                            <div class="strategy-values-field">
+                                <label for="adx_threshold">Minimum ADX to open a trade</label>
+                                <input 
+                                    type="text" 
+                                    id="adx_threshold" 
+                                    name="threshold" 
+                                    min="0"
+                                    step="any" 
+                                    required=""
+                                    data-strategy="adx"
+                                    data-key="threshold"
+                                />
+                            </div>
+                        </div>
+                    </form>
+                </section>
+
+                <div class="strategy-values-btn-container">
+                    <button class="strategy-values-btn" id="strategy-values-btn">Save</button>
+                </div>
+                
+            </div>
+        </main>
+    </div>
+
+    <script src="/public/js/toaster.js"></script> <!-- Toaster + apiFetch. -->
+    <script src="/public/js/strategy-values.js"></script> <!-- Script to handle the strategy values of the route. -->
+
+</body>
+
+</html>
